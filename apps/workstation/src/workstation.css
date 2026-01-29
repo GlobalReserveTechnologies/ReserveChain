@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ReserveChain workstation SPA shell styles */
+.rc-ws-shell {
+  @apply min-h-screen bg-slate-950 text-slate-100 flex;
+}
+
+/* Extra-dim variant for long trading sessions */
+.rc-ws-shell--dim {
+  @apply bg-black text-slate-200;
+}
+
+.rc-ws-sidebar {
+  @apply w-72 border-r border-slate-800 bg-slate-950/90 flex flex-col;
+}
+
+.rc-ws-main {
+  @apply flex-1 flex flex-col;
+}
+
+.rc-ws-topbar {
+  @apply h-12 border-b border-slate-800 flex items-center justify-between px-4 text-xs uppercase tracking-wide text-slate-400;
+}
+
+
+:root {
+  --rc-gold: #f4c86b;
+  --rc-teal: #22d3ee;
+  --rc-purple: #a855f7;
+  --rc-amber: #fbbf24;
+  --rc-danger: #f97373;
+  --rc-success: #4ade80;
+  --rc-panel-bg: #020617;
+  --rc-panel-border: #1e293b;
+}
+
+.rc-ws-panel {
+  @apply m-4 rounded-lg border border-slate-800 bg-slate-950/70 p-4;
+  box-shadow: 0 0 0 1px rgba(15,23,42,0.4), 0 16px 40px rgba(0,0,0,0.6);
+}
+
+.rc-ws-panel-header {
+  @apply flex items-baseline justify-between mb-3;
+}
+
+.rc-ws-panel-title {
+  @apply text-lg font-semibold text-slate-100 tracking-tight;
+}
+
+.rc-ws-panel-subtitle {
+  @apply text-[0.7rem] uppercase tracking-wide text-slate-500;
+}
+
+.rc-ws-panel-body {
+  @apply text-sm text-slate-300;
+}
+
+/* Status pill styles for risk/treasury/chain states */
+.rc-pill {
+  @apply inline-flex items-center px-2 py-0.5 rounded-full text-[0.65rem] font-medium;
+}
+
+.rc-pill--gold {
+  background-color: rgba(244,200,107,0.14);
+  color: #f4c86b;
+}
+
+.rc-pill--teal {
+  background-color: rgba(45,212,191,0.14);
+  color: #22d3ee;
+}
+
+.rc-pill--purple {
+  background-color: rgba(168,85,247,0.16);
+  color: #e9d5ff;
+}
+
+.rc-pill--amber {
+  background-color: rgba(251,191,36,0.14);
+  color: #fbbf24;
+}
+
+.rc-pill--green {
+  background-color: rgba(34,197,94,0.14);
+  color: #4ade80;
+}
+
+.rc-pill--red {
+  background-color: rgba(248,113,113,0.18);
+  color: #f97373;
+}
+
+
+.rc-ws-card {
+  @apply mt-3 rounded-lg border border-slate-800 bg-slate-950/60 p-3;
+}
+
+.rc-ws-card-header {
+  @apply flex items-center justify-between mb-2;
+}
+
+.rc-ws-card-title {
+  @apply text-sm font-semibold text-slate-100;
+}
+
+.rc-ws-card-subtitle {
+  @apply text-[0.7rem] uppercase tracking-wide text-slate-500;
+}
+
+.rc-ws-card-body {
+  @apply text-sm text-slate-200;
+}
+
+
+.rc-ws-table-wrapper {
+  @apply w-full overflow-auto;
+}
+
+.rc-ws-table {
+  @apply w-full text-xs text-left border-collapse;
+}
+
+.rc-ws-table thead tr {
+  @apply border-b border-slate-800;
+}
+
+.rc-ws-table th {
+  @apply py-2 pr-3 font-semibold text-slate-300;
+}
+
+.rc-ws-table td {
+  @apply py-1 pr-3 text-slate-200 align-middle;
+}
+
+.rc-ws-table tbody tr:hover {
+  @apply bg-slate-900/60;
+}
