@@ -1,0 +1,7 @@
+[Unit]
+Description=ReserveChain Auto Update
+
+[Service]
+Type=oneshot
+User=reservechain
+ExecStart=/opt/reservechain/scripts/update.sh

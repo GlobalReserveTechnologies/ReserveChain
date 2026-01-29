@@ -1,0 +1,152 @@
+# ReserveChain Devnet — File Index (High-Level)
+
+This is a high-level overview of the repository layout. Only top-level and key folders are shown.
+
+- ./
+  - FILE_TRACKER.md
+  - README.md
+  - README.txt
+  - go.mod
+- cmd/
+  - cmd/node/
+    - main.go
+- config/
+  - devnet.yaml
+- internal/
+  - internal/analytics/
+    - analytics.go
+  - internal/config/
+    - config.go
+  - internal/core/
+    - accounts.go
+    - chain.go
+    - tiers.go
+    - vaults.go
+    - work.go
+  - internal/econ/
+    - devnet_wrap.go
+    - profiles.go
+    - simulator.go
+    - valuation.go
+    - windows.go
+    - issuance.go
+    - rewards.go
+    - devnet_rewards.go
+    - reserve_pools_crypto.go
+    - rewardtx_builder.go
+    - treasury_balance.go
+    - redemptions.go
+    - mints.go
+    - grc_issuance.go
+    - ledger_mainnet.go
+    - policy_mainnet.go
+    - mainnet_state.go
+  - internal/net/
+    - events.go
+    - follower.go
+    - http_api.go
+    - leader.go
+    - peersync.go
+    - tier_tx.go
+    - ws_hub.go
+  - internal/store/
+    - chainlog.go
+    - store.go
+- public/
+  - index.php
+  - public/api/
+    - earn_summary.php
+    - tier_checkout_commit.php
+    - tier_checkout_quote.php
+    - tier_status.php
+    - treasury.php
+    - vault.php
+    - public/api/lib/
+      - auth.php
+      - db.php
+      - earn.php
+      - tiers.php
+  - public/assets/
+    - public/assets/css/
+      - site.css
+      - workstation.css
+    - public/assets/js/
+      - api_client.js
+      - session_manager.js
+      - site.js
+      - ui_notifier.js
+      - vault_client.js
+      - wallet_chain.js
+      - wallet_keystore.js
+      - workstation_explorer.js
+      - workstation_nav_vaults.js
+      - workstation_portfolio.js
+      - workstation_tiers.js
+      - workstation_trading_links.js
+      - workstation_treasury_overview.js
+      - workstation_vault_analytics.js
+      - workstation_vault_audit.js
+      - workstation_vault_dashboard.js
+      - workstation_vault_policies.js
+      - workstation_vault_roles.js
+      - workstation_vault_settings.js
+      - workstation_vault_stealth.js
+      - workstation_vault_transfer_modal.js
+  - public/sections/
+    - architecture.php
+    - docs.php
+    - economics.php
+    - faq.php
+    - governance.php
+    - network.php
+    - overview.php
+    - privacy.php
+    - security.php
+    - workstation.php
+  - public/trading-terminal/
+    - index.php
+    - multipanel.php
+    - trading_terminal.php
+    - public/trading-terminal/assets/
+  - public/workstation/
+    - index.php
+- rpc/
+  - http_rpc.go
+  - ws.go
+  - rpc/econ/
+    - econ_handlers.go
+- scripts/
+  - init_db.bat
+  - reset_state.bat
+  - run_all.bat
+  - run_node.bat
+  - run_terminal.bat
+  - run_web.bat
+  - run_workstation.bat
+  - set_paths.bat
+- database/
+  - schema.sql
+- runtime/
+  - paths.cfg
+  - set_paths.bat
+  - runtime/sqlite/
+    - README_SQLITE.txt
+- tools/
+  - tools/filetracker/
+    - README.md
+- site/
+  - index.php
+- workstation/
+  - index.php
+- v2.0.0-pre6: Added public/assets/js/wallet_chain_client.js, wired trading-terminal to ReserveConnectWS(), small risk dashboard fix.
+- v2.0.0-pre7: New scripts in /scripts: start_node1.bat, start_node2.bat, start_node3.bat, start_website.bat, start_all.bat.
+- start_node.bat (root)
+- start_website.bat (root)
+- start_all.bat (root)
+- scripts/start_node.bat        - Windows devnet node launcher
+- scripts/start_website.bat     - Windows website/workstation launcher
+- scripts/start_all.bat         - Windows combined launcher
+- scripts/start_node.sh         - Unix devnet node launcher
+- scripts/start_website.sh      - Unix website/workstation launcher
+- scripts/start_all.sh          - Unix combined launcher
+- config/devnet.yaml            - Structured annotated devnet configuration

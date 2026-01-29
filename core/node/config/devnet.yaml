@@ -1,0 +1,189 @@
+# ============================================================================
+# ReserveChain DevNet configuration
+# This file controls how the local DevNet node behaves:
+# - which services it hosts (workstation, explorer, APIs)
+# - how issuance windows and treasury simulations behave
+# - basic P2P / mining toggles for local multi-node clusters
+# ============================================================================
+
+node:
+  # Human friendly node identifier (for logs + UI)
+  id: "node-1"
+
+  # Host the public web interface (marketing site + workstation app + explorer).
+  # DevNet: typically true
+  # TestNet/MainNet: depends on whether this node is a "full UI" node or a headless validator.
+  host_web_interface: true
+
+  # Network identifier (devnet / testnet / mainnet)
+  network: "devnet"
+
+  # --------------------------------------------------------------------------
+  # RPC / HTTP / Websocket bindings for this node
+  # --------------------------------------------------------------------------
+  rpc:
+    # HTTP listen endpoint for JSON/REST + workstation/explorer APIs.
+    # Format follows Go net/http conventions (":8080", "127.0.0.1:8080", etc).
+    http_listen: ":8080"
+
+    # WebSocket path for streaming events (balances, ticks, chain events).
+    ws_path: "/ws"
+
+  # --------------------------------------------------------------------------
+  # Database settings specifically for this node. For DevNet we typically use
+  # a local SQLite file inside the project runtime/ directory.
+  # --------------------------------------------------------------------------
+  db:
+    backend: "sqlite"
+    sqlite_path: "runtime/chain_devnet.sqlite"
+    auto_genesis: true
+
+# ----------------------------------------------------------------------------
+# HTTP / WebSocket interface (for workstation, explorer, REST/RPC)
+# NOTE: current devnet node still uses hard-coded ports internally; these
+#       values are forward-looking and used by tools / docs.
+# ----------------------------------------------------------------------------
+http:
+  # API + WebSocket listen port for this node
+  api_port: 8080
+  ws_port: 8080
+
+  # Allow browser apps from different origins to call this node (dev only).
+  enable_cors: true
+
+# ----------------------------------------------------------------------------
+# P2P settings - discovery / gossip / sync
+# ----------------------------------------------------------------------------
+p2p:
+  # P2P listen port for this node
+  port: 9000
+
+  # Mode:
+  #   - seed : node answers discovery requests and returns a peer list
+  #   - peer : normal node, uses seed_nodes to discover the rest of the cluster
+  mode: "peer"
+
+  # Seed nodes this node should contact on startup to discover other peers.
+  # For a simple 3-node local dev cluster you can make node-1 a seed and
+  # point all others at it, e.g. "127.0.0.1:9001".
+  seed_nodes:
+    - "127.0.0.1:9001"
+
+  # Maximum number of peers to actively maintain.
+  max_peers: 32
+
+  # For devnet we usually keep this false so nodes only bind localhost.
+  allow_external: false
+
+# ----------------------------------------------------------------------------
+# Storage / DB / replay settings
+# ----------------------------------------------------------------------------
+storage:
+  # Backend: currently only "sqlite" is wired, but schema is future-proof.
+  backend: "sqlite"
+
+  # Path to the local devnet chain DB for *this* node instance.
+  # When you make copies of the project for node1/node2/node3, each copy
+  # gets its own runtime/ directory and therefore its own DB.
+  sqlite_path: "runtime/chain_devnet.sqlite"
+
+  # If true, auto-create a genesis block when no DB is present.
+  auto_genesis: true
+
+# ----------------------------------------------------------------------------
+# Issuance windows / corridor / timing
+# These map to WindowSettings in the Go config.
+# ----------------------------------------------------------------------------
+windows:
+  # Mode:
+  #   - fixed     : strictly fixed windows
+  #   - triggered : event-based
+  #   - both      : hybrid
+  mode: "both"
+
+  # Target window length in seconds (soft).
+  target_window_seconds: 60
+
+  # Soft bounds for adaptive window length.
+  min_window_seconds: 20
+  max_window_seconds: 300
+
+# ----------------------------------------------------------------------------
+# FX simulation (devnet only)
+# ----------------------------------------------------------------------------
+fx:
+  # If true, FX rates are simulated locally for devnet.
+  # In testnet/mainnet this would be wired to real oracles or feeds.
+  simulate: true
+
+# ----------------------------------------------------------------------------
+# Yield simulation (devnet only)
+# ----------------------------------------------------------------------------
+yield:
+  # If true, yield curves and synthetic rates are simulated.
+  # Real deployments can disable this and drive yield from on-chain state + off-chain signals.
+  simulate: true
+
+# ----------------------------------------------------------------------------
+# Rewards / mining / issuance (high-level toggles)
+# These map to RewardsSettings in the Go config; detailed economics settings
+# are forward-looking and may not be fully wired yet.
+# ----------------------------------------------------------------------------
+rewards:
+  # If true, devnet will pay out basic mining rewards.
+  enabled: true
+
+  # Reward mode for miners:
+  #   - equal         : each block pays same reward
+  #   - work_weighted : use work scoring / PoP engine when available
+  mode: "work_weighted"
+
+  # Base reward per block (devnet units).
+  base_reward: 10
+
+# ----------------------------------------------------------------------------
+# Economics / treasury / corridor / fee routing (forward-looking)
+# ----------------------------------------------------------------------------
+economics:
+  issuance_curve: "corridor"
+  corridor_target: 1.00          # $1.00 peg target for GRC
+  treasury_window_blocks: 100
+  fee_burn_rate_bps: 25          # 0.25%
+  fee_distribute_bps: 25
+  fee_treasury_bps: 50
+
+# ----------------------------------------------------------------------------
+# Privacy / vaults / stealth / PoP (forward-looking toggles)
+# ----------------------------------------------------------------------------
+privacy:
+  vaults_enabled: true
+  stealth_enabled: true
+  pop_enabled: true
+
+# ----------------------------------------------------------------------------
+# Risk engine / AI shadow mode (forward-looking)
+# ----------------------------------------------------------------------------
+risk:
+  enabled: true
+  mode: "shadow"                  # shadow → assisted → autonomous
+  features:
+    - volatility
+    - load
+    - solvency
+    - vault_risk
+    - liquidity
+    - corridor_utilization
+
+# ----------------------------------------------------------------------------
+# Workstation / trader UI / explorer (forward-looking fields)
+# ----------------------------------------------------------------------------
+workstation:
+  exposed: false                   # false = served by website, not node
+  default_ws_node: "ws://127.0.0.1:8080/ws"
+  enable_popups: true
+
+# ----------------------------------------------------------------------------
+# Operator / validator app toggles (future)
+# ----------------------------------------------------------------------------
+operator:
+  enabled: false

@@ -1,0 +1,370 @@
+
+/* Additional Trading Terminal specific styling hook.
+ * The embedded HTML from reservechain_full_terminal can be themed here
+ * to blend with the workstation look.
+ */
+
+.terminal-body {
+    background: #05070c;
+}
+
+
+/* ReserveChain Trading Terminal chart host */
+.chart-host {
+    position: relative;
+    width: 100%;
+    height: 55vh;
+}
+
+#rsc-chart {
+    display: block;
+}
+
+
+.positions-panel {
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(15,23,42,0.9);
+  border-radius: 8px;
+  border: 1px solid rgba(148,163,184,0.4);
+  font-size: 11px;
+}
+
+.positions-header,
+.positions-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 0.8fr 1fr 1fr 1.2fr;
+  gap: 4px;
+  padding: 2px 0;
+}
+
+.positions-header {
+  font-weight: 600;
+  color: #e5e7eb;
+  border-bottom: 1px solid rgba(148,163,184,0.3);
+  margin-bottom: 4px;
+}
+
+.positions-row {
+  color: #cbd5f5;
+}
+
+.positions-empty {
+  padding: 4px 0;
+  color: #6b7280;
+}
+
+.positions-row .pnl-pos {
+  color: #4ade80;
+}
+
+.positions-row .pnl-neg {
+  color: #f97373;
+}
+
+
+
+/* === ReserveChain terminal boot overlay & HUD === */
+
+.rc-boot-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at top, rgba(56, 189, 248, 0.08), transparent 55%),
+    rgba(10, 16, 30, 0.96);
+  transition: opacity 0.35s ease-out, visibility 0.35s ease-out;
+}
+
+.rc-boot-overlay.rc-boot-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.rc-boot-panel {
+  width: min(780px, 100vw - 32px);
+  border-radius: 20px;
+  padding: 20px 22px 18px;
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.24), rgba(15, 23, 42, 0.98));
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  box-shadow:
+    0 26px 60px rgba(15, 23, 42, 0.98),
+    0 0 0 1px rgba(15, 23, 42, 1);
+}
+
+.rc-boot-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(100, 116, 139, 0.6);
+}
+
+.rc-boot-logo-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 10%, #ffffff, #e5e7eb 35%, #111827 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 1px rgba(148, 163, 184, 0.6),
+    0 10px 30px rgba(15, 23, 42, 0.95);
+}
+
+.rc-boot-logo-emblem {
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #0f172a;
+}
+
+.rc-boot-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rc-boot-title {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.rc-boot-subtitle {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.rc-boot-body {
+  padding-top: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.2fr);
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .rc-boot-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.rc-boot-steps {
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(30, 64, 175, 0.6);
+  padding: 10px 12px;
+  font-size: 13px;
+  max-height: 210px;
+  overflow: hidden;
+}
+
+.rc-boot-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 2px;
+  color: #e5e7eb;
+}
+
+.rc-boot-step-label {
+  flex: 1;
+}
+
+.rc-boot-step-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 2px solid rgba(148, 163, 184, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+.rc-boot-step-icon.rc-boot-step-spinner {
+  border-top-color: rgba(56, 189, 248, 1);
+  animation: rc-spin 0.85s linear infinite;
+}
+
+.rc-boot-step-icon.rc-boot-step-done {
+  border-color: rgba(34, 197, 94, 0.9);
+  color: #bbf7d0;
+}
+
+.rc-boot-step.rc-boot-step-active .rc-boot-step-label {
+  color: #e5e7eb;
+}
+
+.rc-boot-step.rc-boot-step-done .rc-boot-step-label {
+  color: #bbf7d0;
+}
+
+@keyframes rc-spin {
+  to { transform: rotate(360deg); }
+}
+
+.rc-boot-status-tray {
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  padding: 9px 11px;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rc-boot-status-group {
+  border-radius: 9px;
+  padding: 6px 7px;
+  background: radial-gradient(circle at top left, rgba(30, 64, 175, 0.32), transparent 60%);
+  border: 1px solid rgba(51, 65, 85, 0.9);
+}
+
+.rc-boot-status-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  margin-bottom: 3px;
+}
+
+.rc-boot-status-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+}
+
+.rc-boot-status-name {
+  flex: 1;
+}
+
+.rc-boot-status-metrics {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.rc-boot-status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(55, 65, 81, 0.8);
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9);
+}
+
+.rc-status-ok {
+  background: rgba(34, 197, 94, 1);
+  box-shadow: 0 0 6px rgba(22, 163, 74, 0.9);
+}
+.rc-status-pending {
+  background: rgba(234, 179, 8, 0.9);
+  box-shadow: 0 0 4px rgba(234, 179, 8, 0.9);
+}
+.rc-status-error {
+  background: rgba(248, 113, 113, 1);
+  box-shadow: 0 0 6px rgba(248, 113, 113, 0.9);
+}
+
+.rc-boot-footer {
+  grid-column: 1 / -1;
+  padding-top: 6px;
+  font-size: 11px;
+  color: #9ca3af;
+  text-align: right;
+}
+
+.terminal-chrome.rc-main-hidden {
+  opacity: 0;
+  transition: opacity 0.35s ease-out;
+}
+
+.terminal-chrome.rc-main-visible {
+  opacity: 1;
+}
+
+/* Metrics HUD */
+
+.rc-metrics {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 4100;
+  font-size: 11px;
+  color: #e5e7eb;
+}
+
+.rc-metrics-toggle {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.96);
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.rc-metrics-body {
+  margin-top: 6px;
+  border-radius: 12px;
+  border: 1px solid rgba(30, 64, 175, 0.7);
+  background: rgba(15, 23, 42, 0.97);
+  padding: 6px 9px;
+  min-width: 190px;
+  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.96);
+}
+
+.rc-metrics-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.rc-metrics-label {
+  color: #9ca3af;
+  margin-right: 8px;
+}
+
+.rc-metrics-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.rc-metrics-collapsed .rc-metrics-body {
+  display: none;
+}
+
+/* Reserve tooltip */
+
+.rc-reserve-tooltip {
+  position: fixed;
+  pointer-events: none;
+  z-index: 4200;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.8);
+  background: rgba(15, 23, 42, 0.98);
+  font-size: 11px;
+  color: #e5e7eb;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.96);
+  opacity: 0;
+  transition: opacity 0.12s ease-out;
+}
+
+.rc-reserve-tip-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.rc-reserve-tip-line {
+  line-height: 1.35;
+}
+
+.rc-reserve-tip-sub {
+  color: #9ca3af;
+  font-size: 10px;
+}
