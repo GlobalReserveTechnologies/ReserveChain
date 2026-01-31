@@ -11,6 +11,10 @@
     return Number.isFinite(n) ? n : fallback;
   }
 
+  function randomId(prefix = 'ord') {
+    return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
+  }
+
   const MarginContext = {
     baseEquity: DEFAULT_BASE_EQUITY,
     equity: DEFAULT_BASE_EQUITY,
@@ -21,6 +25,69 @@
     lastPrice: null,
     positions: [],
     lastSnapshot: null,
+
+    async loadInitialEquity() {
+      let nextEquity = DEFAULT_BASE_EQUITY;
+      try {
+        const stored = localStorage.getItem('rc_terminal_equity');
+        if (stored) {
+          const parsed = safeNumber(stored, DEFAULT_BASE_EQUITY);
+          if (parsed > 0) nextEquity = parsed;
+        }
+      } catch (e) {
+        console.warn('MarginContext: unable to read stored equity', e);
+      }
+
+      this.baseEquity = nextEquity;
+      this.equity = nextEquity;
+      this.marginUsed = 0;
+      this.marginFree = nextEquity;
+      this.exposureNotional = 0;
+      this.totalFees = 0;
+      this.snapshot('init');
+      return nextEquity;
+    },
+
+    async openPosition({ symbol = 'GRC-USD', side = 'long', qty, price }) {
+      const size = safeNumber(qty, 0);
+      const px = safeNumber(price, this.lastPrice || 1.0);
+      if (!size || !px) {
+        throw new Error('Invalid size or price');
+      }
+
+      const requiredMargin = (size * px) / DEFAULT_LEVERAGE;
+      if (this.marginFree < requiredMargin) {
+        throw new Error('Insufficient margin available');
+      }
+
+      const feeRate = 0.0004;
+      const fee = size * px * feeRate;
+      const fillSide = side === 'short' ? 'sell' : 'buy';
+      const orderId = randomId('sim');
+
+      this.applyFill({
+        order_id: orderId,
+        symbol,
+        side: fillSide,
+        qty: size,
+        price: px,
+        fee,
+        ts: Date.now(),
+      });
+
+      try {
+        localStorage.setItem('rc_terminal_equity', String(this.equity));
+      } catch (e) {
+        console.warn('MarginContext: unable to store equity', e);
+      }
+
+      return {
+        id: orderId,
+        fee,
+        requiredMargin,
+        equity: this.equity,
+      };
+    },
 
     // Apply a single fill coming from WS 'execution' channel.
     // fill = { order_id, symbol, side, qty, price, fee, ts }
