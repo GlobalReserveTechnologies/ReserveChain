@@ -47,18 +47,18 @@
     function createChartCanvas(rootEl) {
         const c = document.createElement('canvas');
         c.id = 'rsc-chart';
-        c.width = rootEl.clientWidth || window.innerWidth;
-        c.height = Math.round((rootEl.clientHeight || window.innerHeight) * 0.55);
+        const mount = rootEl.querySelector('.chart-host') || rootEl;
+        c.width = mount.clientWidth || window.innerWidth;
+        c.height = mount.clientHeight || Math.round(window.innerHeight * 0.55);
         c.style.display = 'block';
         c.style.width = '100%';
-        c.style.height = '55vh';
+        c.style.height = '100%';
         c.style.background = '#050915';
         c.style.borderBottom = '1px solid rgba(88,131,255,0.4)';
-        const mount = rootEl.querySelector('.chart-host') || rootEl;
         mount.insertBefore(c, mount.firstChild);
         window.addEventListener('resize', () => {
-            c.width = mount.clientWidth;
-            c.height = Math.round(window.innerHeight * 0.55);
+            c.width = mount.clientWidth || window.innerWidth;
+            c.height = mount.clientHeight || Math.round(window.innerHeight * 0.55);
             draw();
         });
         return c;

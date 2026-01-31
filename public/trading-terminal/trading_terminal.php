@@ -233,11 +233,12 @@
           </div>
 
           <!-- CHART MAIN AREA -->
-          <div class="chart-main">
-            <!-- price axis labels -->
-            <div class="price-axis">
-              <div class="price-label green">135.00</div>
-              <div class="price-label">120.00</div>
+        <div class="chart-main">
+          <div class="chart-host"></div>
+          <!-- price axis labels -->
+          <div class="price-axis">
+            <div class="price-label green">135.00</div>
+            <div class="price-label">120.00</div>
               <div class="price-label yellow">Corridor 100.00</div>
               <div class="price-label">86.50</div>
               <div class="price-label">72.00</div>
@@ -294,7 +295,7 @@
 
         <div class="order-form">
           <div class="order-input">
-            <input type="text" value="1,376,751.38" />
+            <input type="text" id="order-available" value="1,376,751.38" />
             <span class="unit">GRC</span>
           </div>
 
@@ -303,7 +304,7 @@
             <span class="price-quote-text">Quote (USDT)</span>
           </div>
           <div class="order-input">
-            <input type="text" value="107.88" />
+            <input type="text" id="order-price" value="107.88" />
             <span class="unit">USDT</span>
           </div>
 
@@ -312,8 +313,16 @@
             <span class="size-quote-text">Base (GRC)</span>
           </div>
           <div class="order-input">
-            <input type="text" value="0.000" />
+            <input type="text" id="order-qty" value="0.000" />
             <span class="unit">GRC</span>
+          </div>
+          <div class="order-label-row">
+            <span>Total</span>
+            <span class="total-quote-text">Quote (USDT)</span>
+          </div>
+          <div class="order-input">
+            <input type="text" id="order-total" value="0.00" readonly />
+            <span class="unit">USDT</span>
           </div>
 
           <div class="percent-row">
@@ -427,6 +436,11 @@ if (layoutBtn) {
       const buyBtn = document.querySelector(".btn-buy");
       const sellBtn = document.querySelector(".btn-sell");
       const toast = document.getElementById("toast");
+      const accountEquityEl = document.getElementById("rc-account-equity");
+      const availableInput = document.getElementById("order-available");
+      const priceInput = document.getElementById("order-price");
+      const qtyInput = document.getElementById("order-qty");
+      const totalInput = document.getElementById("order-total");
 
       const priceLabelText = document.querySelector(".price-label-text");
       const priceQuoteText = document.querySelector(".price-quote-text");
@@ -439,6 +453,25 @@ if (layoutBtn) {
         toast.classList.add("show");
         setTimeout(() => toast.classList.remove("show"), 1600);
       }
+
+      function parseNumeric(value) {
+        if (typeof value !== "string") {
+          return Number(value) || 0;
+        }
+        const normalized = value.replace(/,/g, "").trim();
+        return Number(normalized) || 0;
+      }
+
+      function updateOrderTotal() {
+        if (!priceInput || !qtyInput || !totalInput) return;
+        const price = parseNumeric(priceInput.value);
+        const qty = parseNumeric(qtyInput.value);
+        const total = price * qty;
+        totalInput.value = total ? total.toFixed(2) : "0.00";
+      }
+
+      if (priceInput) priceInput.addEventListener("input", updateOrderTotal);
+      if (qtyInput) qtyInput.addEventListener("input", updateOrderTotal);
 
       // Top symbol tabs
       tabs.forEach((tab) => {
@@ -546,6 +579,13 @@ if (layoutBtn) {
         chip.addEventListener("click", () => {
           percentChips.forEach((c) => c.classList.remove("active"));
           chip.classList.add("active");
+          if (availableInput && qtyInput) {
+            const pct = parseNumeric(chip.textContent) / 100;
+            const available = parseNumeric(availableInput.value);
+            const nextQty = available * pct;
+            qtyInput.value = nextQty.toFixed(3);
+            updateOrderTotal();
+          }
         });
       });
 
@@ -583,6 +623,19 @@ if (layoutBtn) {
       });
 
       // Buy / Sell buttons
+
+      updateOrderTotal();
+      if (window.MarginContext && typeof MarginContext.loadInitialEquity === "function") {
+        MarginContext.loadInitialEquity().then((equity) => {
+          if (availableInput) {
+            availableInput.value = equity.toFixed(2);
+          }
+          if (accountEquityEl) {
+            accountEquityEl.textContent = `₲${equity.toFixed(2)}`;
+          }
+          updateOrderTotal();
+        });
+      }
       
       function handleOrderButton(btn, side) {
         btn.addEventListener("click", async () => {
@@ -610,11 +663,10 @@ if (layoutBtn) {
             const symbolEl = document.querySelector(".pair-main-symbol");
             const symbol = symbolEl ? symbolEl.textContent.trim() : "GRC/USDT";
 
-            const inputs = document.querySelectorAll(".order-panel .order-input input");
-            const priceVal = inputs[0] ? inputs[0].value : "0";
-            const qtyVal = inputs[1] ? inputs[1].value : "0";
-            const price = parseFloat(priceVal.replace(/,/g, "")) || 0;
-            const qty = parseFloat(qtyVal.replace(/,/g, "")) || 0;
+            const priceVal = priceInput ? priceInput.value : "0";
+            const qtyVal = qtyInput ? qtyInput.value : "0";
+            const price = parseNumeric(priceVal);
+            const qty = parseNumeric(qtyVal);
 
             if (!qty || !price) {
               const msg = "Enter a valid price and size before submitting an order.";
@@ -638,6 +690,13 @@ if (layoutBtn) {
 
             const msg = `Opened ${side} ${qty} ${symbol} @ ${price.toFixed(2)} (pos: ${pos.id})`;
             window.UINotifier ? UINotifier.info(msg) : alert(msg);
+            updateOrderTotal();
+            if (availableInput) {
+              availableInput.value = MarginContext.equity.toFixed(2);
+            }
+            if (accountEquityEl) {
+              accountEquityEl.textContent = `₲${MarginContext.equity.toFixed(2)}`;
+            }
           } catch (err) {
             const msg = "Order rejected: " + (err && err.message ? err.message : "Unknown error");
             console.error(msg, err);
@@ -866,4 +925,3 @@ if (layoutBtn) {
 </script>
 </body>
 </html>
-
